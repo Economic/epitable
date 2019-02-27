@@ -1,9 +1,3 @@
-library(readxl)
-library(tidyverse)
-library(magrittr)
-library(readr)
-
-
 # load EPI CSS
 epicss <-
   system.file("extdata", "epi-chart.css" ,package = "epitable") %>%
@@ -49,6 +43,8 @@ selfcontained_bottom <- function(x) {
 #' @param example Just for testing purposes.
 #' @keywords html tables
 #' @export
+#' @import magrittr
+#' @import readr
 #' @examples
 #' epitable()
 #'

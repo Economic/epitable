@@ -3,3 +3,5 @@
 S3method(print,epitable)
 export(epitable)
 export(epitable_append)
+import(magrittr)
+import(readr)
