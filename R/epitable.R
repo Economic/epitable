@@ -77,7 +77,6 @@ epitable <- function(x, file=NULL, selfcontained=FALSE, example=FALSE) {
   return(thetable)
 }
 
-
 #' @rdname epitable
 #' @param useViewer If you are using RStudio there is a viewer thar can render
 #'  the table within that is envoced if in \code{\link[base]{interactive}} mode.

@@ -18,13 +18,3 @@ Example
 -------
 
 This is a basic example which shows you how to solve a common problem:
-
-``` r
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-``` r
-epitable::epitable(1,example=TRUE)
-```

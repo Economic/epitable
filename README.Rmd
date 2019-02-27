@@ -28,12 +28,9 @@ devtools::install_github("Economic/epitable")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example, include = FALSE}
 ## basic example code
+epitable::epitable(1, example=TRUE)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-```{r cars}
-epitable::epitable(1,example=TRUE)
-```
