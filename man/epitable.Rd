@@ -2,10 +2,13 @@
 % Please edit documentation in R/epitable.R
 \name{epitable}
 \alias{epitable}
+\alias{knit_print.epitable}
 \alias{print.epitable}
 \title{A EPI HTML Table Making Function}
 \usage{
 epitable(x, file = NULL, selfcontained = FALSE, example = FALSE)
+
+\method{knit_print}{epitable}(x, ...)
 
 \method{print}{epitable}(x, useViewer = TRUE, ...)
 }

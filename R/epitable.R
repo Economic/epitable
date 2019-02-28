@@ -77,6 +77,15 @@ epitable <- function(x, file=NULL, selfcontained=FALSE, example=FALSE) {
   return(thetable)
 }
 
+
+#' @rdname epitable
+#' @importFrom knitr knit_print
+#' @importFrom knitr asis_output
+#' @export
+knit_print.epitable<- function(x, ...){
+  asis_output(x)
+}
+
 #' @rdname epitable
 #' @param useViewer If you are using RStudio there is a viewer thar can render
 #'  the table within that is envoced if in \code{\link[base]{interactive}} mode.

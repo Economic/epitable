@@ -28,9 +28,9 @@ devtools::install_github("Economic/epitable")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example, include = FALSE}
+```{r example, eval=FALSE}
 ## basic example code
-epitable::epitable(1, example=TRUE)
+epitable::epitable(1,example=TRUE)
 ```
 
 
