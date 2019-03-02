@@ -34,6 +34,49 @@ selfcontained_bottom <- function(x) {
 }
 
 
+
+table_meat <- function(x, rownames, rowlevels=NULL) {
+
+  # begin table header
+  the_table <- paste0("\n<thead>","\n<tr><th scope=\"col\">hello</th></tr>")
+
+  # end table header
+  the_table %<>% paste0("\n</thead>")
+
+  # begin table body
+  the_table %<>% paste("\n<tbody>")
+
+  # loop over rows
+  for (row_i in 1:nrow(x)) {
+
+    # begin row
+    if (is.null(rowlevels)) {
+      the_table %<>% paste0("\n<tr>")
+    } else if (rowlevels[row_i] == 1) {
+      the_table %<>% paste0("\n<tr>")
+    } else {
+      the_table %<>% paste0("\n<tr class=\"row-level",rowlevels[row_i],"\">")
+    }
+
+    the_table %<>% paste0("\n<th scope=\"row\">",rownames[row_i],"</th>")
+    the_table %<>% paste("\n<td style=\"text-align: right;\">$403.2</td>")
+    the_table %<>% paste("\n<td>100.0%</td>")
+    the_table %<>% paste("\n<td style=\"text-align: right;\">$111.1</td>")
+    the_table %<>% paste("\n<td>100.0%</td>")
+    the_table %<>% paste("\n<td style=\"text-align: right;\">$-292.1</td>")
+    the_table %<>% paste("\n<td style=\"text-align: right;\">100.0%</td>")
+
+    # end row
+    the_table %<>% paste("\n</tr>")
+  }
+
+  # end table body
+  the_table %<>% paste("\n</tbody>")
+
+  return(the_table)
+}
+
+
 #' @title A EPI HTML Table Making Function
 #'
 #' @description This is the table making function.
@@ -49,16 +92,26 @@ selfcontained_bottom <- function(x) {
 #' epitable()
 #'
 # epitable creates the table
-epitable <- function(x, file=NULL, selfcontained=FALSE, example=FALSE) {
+epitable <- function(x,
+                     rownames,
+                     rowlevels=NULL,
+                     file=NULL,
+                     selfcontained=FALSE,
+                     example=FALSE) {
 
-  # create the table snippet
+    # just for testing
   if(example) {
-    thetable <- paste("<table>\n",x)
-    thetable %<>% paste(read_file(testtable))
-    thetable %<>% paste("\n</table>")
+    the_table <- paste("<table>\n",x)
+    the_table %<>% paste(read_file(testtable))
+    the_table %<>% paste("\n</table>")
   } else {
-    thetable <- paste("<table>\n",x,"\n")
-    thetable %<>% paste("</table>")
+    # create the table snippet
+    # begin the table
+    the_table <- paste("<table>\n")
+    # add the meat of the table
+    the_table %<>% paste0(table_meat(x, rownames, rowlevels),"\n")
+    # end the table
+    the_table %<>% paste("\n</table>")
   }
 
   # if writing to file
@@ -66,15 +119,15 @@ epitable <- function(x, file=NULL, selfcontained=FALSE, example=FALSE) {
     if (selfcontained) {
       htmlpage <- paste0(
         selfcontained_top(),
-        thetable,
+        the_table,
         selfcontained_bottom()
       )
       cat(htmlpage,file = file)
-    } else cat(thetable, file = file)
+    } else cat(the_table, file = file)
   }
 
-  class(thetable) = c("epitable")
-  return(thetable)
+  class(the_table) = c("epitable")
+  return(the_table)
 }
 
 
@@ -87,16 +140,7 @@ knit_print.epitable<- function(x, ...){
 }
 
 #' @rdname epitable
-#' @param useViewer If you are using RStudio there is a viewer thar can render
-#'  the table within that is envoced if in \code{\link[base]{interactive}} mode.
-#'  Set this to \code{FALSE} if you want to remove that  functionality. You can
-#'  also force the function to call a specific viewer by setting this to a
-#'  viewer function, e.g. \code{useViewer = utils::browseURL} if you want to
-#'  override the default RStudio viewer. Another option that does the same is to
-#'  set the \code{options(viewer=utils::browseURL)} and it will default to that
-#'  particular viewer (this is how RStudio decides on a viewer).
-#'  \emph{Note:} If you want to force all output to go through the
-#'  \code{\link[base]{cat}()} the set \code{\link[base]{options}(htmlTable.cat = TRUE)}.
+#' @param useViewer Set to false to show snippet in console.
 #' @export
 print.epitable <- function(x, useViewer = TRUE, ...) {
   # taken from https://stackoverflow.com/a/22871109
@@ -149,9 +193,9 @@ epitable_append <- function(...) {
     x <- paste(...,sep="\n")
     stripped <- gsub("<table>", "", x)
     stripped <- gsub("</table>", "", stripped)
-    thetable <- paste("<table>",stripped,"</table>",sep="\n")
-    class(thetable) = c("epitable")
-    return(thetable)
+    the_table <- paste("<table>",stripped,"</table>",sep="\n")
+    class(the_table) = c("epitable")
+    return(the_table)
   } else {
     stop("All arguments must have class epitable.")
   }
