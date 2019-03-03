@@ -35,7 +35,13 @@ selfcontained_bottom <- function(x) {
 
 
 
-table_meat <- function(x, rownames, rowlevels=NULL) {
+table_meat <- function(x, rownamevar, rowlevels=NULL) {
+
+  table_input <- x
+
+  # adjust dataframe to rownames
+  rownames <- table_input %>% select(!!enquo(rownamevar))
+  table_input %<>% select(-!!enquo(rownamevar))
 
   # begin table header
   the_table <- paste0("\n<thead>","\n<tr><th scope=\"col\">hello</th></tr>")
@@ -58,7 +64,7 @@ table_meat <- function(x, rownames, rowlevels=NULL) {
       the_table %<>% paste0("\n<tr class=\"row-level",rowlevels[row_i],"\">")
     }
 
-    the_table %<>% paste0("\n<th scope=\"row\">",rownames[row_i],"</th>")
+    the_table %<>% paste0("\n<th scope=\"row\">", rownames[row_i,], "</th>")
     the_table %<>% paste("\n<td style=\"text-align: right;\">$403.2</td>")
     the_table %<>% paste("\n<td>100.0%</td>")
     the_table %<>% paste("\n<td style=\"text-align: right;\">$111.1</td>")
@@ -86,14 +92,16 @@ table_meat <- function(x, rownames, rowlevels=NULL) {
 #' @param example Just for testing purposes.
 #' @keywords html tables
 #' @export
-#' @import magrittr
-#' @import readr
+#' @importFrom magrittr %>% %<>%
+#' @importFrom readr read_file
+#' @importFrom dplyr select
+#' @importFrom rlang enquo
 #' @examples
 #' epitable()
 #'
 # epitable creates the table
 epitable <- function(x,
-                     rownames,
+                     rownamevar,
                      rowlevels=NULL,
                      file=NULL,
                      selfcontained=FALSE,
@@ -109,7 +117,7 @@ epitable <- function(x,
     # begin the table
     the_table <- paste("<table>\n")
     # add the meat of the table
-    the_table %<>% paste0(table_meat(x, rownames, rowlevels),"\n")
+    the_table %<>% paste0(table_meat(x, rownamevar=!!enquo(rownamevar), rowlevels=rowlevels),"\n")
     # end the table
     the_table %<>% paste("\n</table>")
   }
