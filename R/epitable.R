@@ -35,13 +35,9 @@ selfcontained_bottom <- function(x) {
 
 
 
-table_meat <- function(x, rownamevar, rowlevels=NULL) {
+table_meat <- function(x, rownamevec, rowlevels) {
 
   table_input <- x
-
-  # adjust dataframe to rownames
-  rownames <- table_input %>% select(!!enquo(rownamevar))
-  table_input %<>% select(-!!enquo(rownamevar))
 
   # begin table header
   the_table <- paste0("\n<thead>","\n<tr><th scope=\"col\">hello</th></tr>")
@@ -64,13 +60,22 @@ table_meat <- function(x, rownamevar, rowlevels=NULL) {
       the_table %<>% paste0("\n<tr class=\"row-level",rowlevels[row_i],"\">")
     }
 
-    the_table %<>% paste0("\n<th scope=\"row\">", rownames[row_i,], "</th>")
-    the_table %<>% paste("\n<td style=\"text-align: right;\">$403.2</td>")
-    the_table %<>% paste("\n<td>100.0%</td>")
-    the_table %<>% paste("\n<td style=\"text-align: right;\">$111.1</td>")
-    the_table %<>% paste("\n<td>100.0%</td>")
-    the_table %<>% paste("\n<td style=\"text-align: right;\">$-292.1</td>")
-    the_table %<>% paste("\n<td style=\"text-align: right;\">100.0%</td>")
+    # row header
+    the_table %<>% paste0("\n<th scope=\"row\">", rownamevec[row_i], "</th>")
+
+    style<-paste("style=\"font-variant-numeric: tabular-nums; text-align: right;\"")
+
+    # loop over columns
+    for (col_j in 1:length(x[row_i,])) {
+      the_table %<>% paste("\n<td",style,">",x[[row_i,col_j]], "</td>")
+    }
+
+    #the_table %<>% paste("\n<td style=\"text-align: right;\">$403.2</td>")
+    #the_table %<>% paste("\n<td>100.0%</td>")
+    #the_table %<>% paste("\n<td style=\"text-align: right;\">$111.1</td>")
+    #the_table %<>% paste("\n<td>100.0%</td>")
+    #the_table %<>% paste("\n<td style=\"text-align: right;\">$-292.1</td>")
+    #the_table %<>% paste("\n<td style=\"text-align: right;\">100.0%</td>")
 
     # end row
     the_table %<>% paste("\n</tr>")
@@ -94,22 +99,45 @@ table_meat <- function(x, rownamevar, rowlevels=NULL) {
 #' @export
 #' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_file
-#' @importFrom dplyr select
+#' @importFrom dplyr select pull
 #' @importFrom rlang enquo
 #' @examples
 #' epitable()
 #'
 # epitable creates the table
 epitable <- function(x,
-                     rownamevar,
+                     rownames,
+                     rownamevec,
                      rowlevels=NULL,
                      file=NULL,
                      selfcontained=FALSE,
                      example=FALSE) {
 
-    # just for testing
+  x <- as.data.frame(x)
+
+  # checks on rownames and rownamevec
+  if (missing(rownames) && missing(rownamevec)) {
+    stop("You need to specify either rownames or rownamevec")
+  }
+  if (!missing(rownames) && !missing(rownamevec)) {
+    stop("You cannot specify both rownames or rownamevec. Pick one or the other.")
+  }
+  # if using rownames clean up x so that it does not have rownames
+  # and assign rownamevec
+  if (!missing(rownames)) {
+    if (!(deparse(substitute(rownames)) %in% colnames(x))) {
+      stop("rownames needs to be a variable of your data")
+    }
+    rownamevec <- x %>% select(!!enquo(rownames)) %>% pull()
+    x %<>% select(-!!enquo(rownames))
+  }
+  if (!missing(rownamevec) && (nrow(x) != length(rownamevec))) {
+    stop("rownamevec needs to have the same number of rows as your data")
+  }
+
+  # just for testing
   if(example) {
-    the_table <- paste("<table>\n",x)
+    the_table <- paste("<table>\n")
     the_table %<>% paste(read_file(testtable))
     the_table %<>% paste("\n</table>")
   } else {
@@ -117,7 +145,7 @@ epitable <- function(x,
     # begin the table
     the_table <- paste("<table>\n")
     # add the meat of the table
-    the_table %<>% paste0(table_meat(x, rownamevar=!!enquo(rownamevar), rowlevels=rowlevels),"\n")
+    the_table %<>% paste0(table_meat(x, rownamevec=rownamevec, rowlevels=rowlevels),"\n")
     # end the table
     the_table %<>% paste("\n</table>")
   }

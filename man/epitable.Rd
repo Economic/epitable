@@ -6,7 +6,7 @@
 \alias{print.epitable}
 \title{A EPI HTML Table Making Function}
 \usage{
-epitable(x, rownamevar, rowlevels = NULL, file = NULL,
+epitable(x, rownames, rownamevec, rowlevels = NULL, file = NULL,
   selfcontained = FALSE, example = FALSE)
 
 \method{knit_print}{epitable}(x, ...)
