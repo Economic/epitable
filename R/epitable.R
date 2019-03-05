@@ -4,7 +4,9 @@ epicss <-
   read_file() %>%
   paste("html * {font-family: 'Proxima Nova', 'Lato' !important;}\n") %>%
   paste(".figure.figure-theme-clean{margin:0;border-top:none;}\n") %>%
-  paste(".figure.figure-theme-clean .figInner{border-bottom:none;}\n")
+  paste(".figure.figure-theme-clean .figInner{border-bottom:none;}\n") %>%
+  paste(".figure .figInner table th[scope=\"col\"][colspan],.external-chartcard-info .figInner table th[scope=\"col\"][colspan],.figure .figInner table th[scope=\"colgroup\"][colspan],.external-chartcard-info .figInner table th[scope=\"colgroup\"][colspan]{border-bottom:0;background:#fff;text-align:center;text-transform:none;font-weight:600;border-bottom:2px solid #ddd}\n")
+
 
 # load complete test table for testing purposes
 testtable <- system.file("extdata", "testtable.html", package = "epitable")
@@ -43,44 +45,53 @@ table_meat <- function(x,
                        rowlevels,
                        colnames=NULL,
                        colgroups=NULL,
-                       colgroupspattern=NULL
+                       colgroupspattern=NULL,
+                       header
                        ) {
 
   table_input <- x %>% as.data.frame()
 
-  # begin table header
-  the_table <- paste0("\n<thead>")
+  if (header) {
+    # begin table header
+    the_header <- paste0("\n<thead>")
 
-  if (!is.null(colgroups) && !is.null(colgroupspattern)) {
-    the_table %<>% paste0("\n<tr>")
-    colgrouprownameheader <- ""
-    the_table %<>% paste0("<th scope=\"colgroup\">", colgrouprownameheader, "</th>")
-    for (col_j in 1:length(colgroups)) {
-      the_table %<>% paste0("<th colspan=\"", colgroupspattern[col_j], "\"scope=\"colgroup\">", colgroups[col_j], "</th>")
+    if (!is.null(colgroups) && !is.null(colgroupspattern)) {
+      the_header %<>% paste0("\n<tr>")
+      colgrouprownameheader <- ""
+      the_header %<>% paste0("\n<th scope=\"colgroup\">", colgrouprownameheader, "</th>")
+      for (col_j in 1:length(colgroups)) {
+        if (col_j == 1) {
+          class<-NULL
+        } else class<-paste("class=\"table-division-left\" ")
+
+        the_header %<>% paste0("\n<th ", class, "colspan=\"", colgroupspattern[col_j], "\" scope=\"colgroup\">", colgroups[col_j], "</th>")
+      }
+
+      the_header %<>% paste0("</tr>")
+   }
+
+    # begin column names
+    the_header %<>% paste0("\n<tr>")
+    # blank col above rownamesvar for now
+    rownameheader <- ""
+    the_header %<>% paste0("<th scope=\"col\">", rownameheader, "</th>")
+    if (is.null(colnames)) {
+      colnames <- colnames(x)
     }
-#    <th scope="colgroup"></th>
-#    <th colspan="2" scope="colgroup">U.S. imports</th>
-#    <th class="table-division-left" colspan="2" scope="colgroup">U.S. exports</th>
-#    <th class="table-division-left" colspan="2" scope="colgroup">Trade balance</th>
-    the_table %<>% paste0("</tr>")
+    style<-paste("style=\"text-align: right;\"")
+    for (col_j in 1:length(colnames)) {
+      the_header %<>% paste("<th scope=\"col\"",style,">", colnames[col_j], "</th>")
+    }
+    # end column names
+    the_header %<>% paste0("</tr>")
+
+    # end table header
+    the_header %<>% paste0("\n</thead>")
+  } else {
+    the_header <- NULL
   }
 
-  # begin column names
-  the_table %<>% paste0("\n<tr>")
-  # blank col above rownamesvar for now
-  rownameheader <- ""
-  the_table %<>% paste0("<th scope=\"col\">", rownameheader, "</th>")
-  if (is.null(colnames)) {
-    colnames <- colnames(x)
-  }
-  for (col_j in 1:length(colnames)) {
-    the_table %<>% paste0("<th scope=\"col\">", colnames[col_j], "</th>")
-  }
-  # end column names
-  the_table %<>% paste0("</tr>")
-
-  # end table header
-  the_table %<>% paste0("\n</thead>")
+  the_table <- the_header
 
   # begin table body
   the_table %<>% paste("\n<tbody>")
@@ -106,13 +117,6 @@ table_meat <- function(x,
     for (col_j in 1:length(table_input[row_i,])) {
       the_table %<>% paste("\n<td",style,">",table_input[[row_i,col_j]], "</td>")
     }
-
-    #the_table %<>% paste("\n<td style=\"text-align: right;\">$403.2</td>")
-    #the_table %<>% paste("\n<td>100.0%</td>")
-    #the_table %<>% paste("\n<td style=\"text-align: right;\">$111.1</td>")
-    #the_table %<>% paste("\n<td>100.0%</td>")
-    #the_table %<>% paste("\n<td style=\"text-align: right;\">$-292.1</td>")
-    #the_table %<>% paste("\n<td style=\"text-align: right;\">100.0%</td>")
 
     # end row
     the_table %<>% paste("\n</tr>")
@@ -150,6 +154,7 @@ epitable <- function(x,
                      colgroupspattern=NULL,
                      select=NULL,
                      rowlevels=NULL,
+                     header=TRUE,
                      file=NULL,
                      selfcontained=FALSE
                      ) {
@@ -187,7 +192,8 @@ epitable <- function(x,
       rowlevels = rowlevels,
       colnames = colnames,
       colgroups = colgroups,
-      colgroupspattern = colgroupspattern
+      colgroupspattern = colgroupspattern,
+      header = header
     )
 
   # create the table snippet

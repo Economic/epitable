@@ -121,29 +121,48 @@ thelevels <- tradebalance_fmt %>%
 epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels)
 ```
 
-## Columns
+## Headers
+Use more descriptive column names:
 ``` {r}
-epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels, colnames=c("Import levels", "Import shares", "Export levels", "Export shares", "Trade balance levels", "Trade balance shares"))
+epitable(tradebalance_fmt, 
+         rownamesvar=industry, 
+         rowlevels=thelevels, 
+         colnames=c("Import levels", 
+                    "Import shares", 
+                    "Export levels", 
+                    "Export shares", 
+                    "Trade balance levels", 
+                    "Trade balance shares")
+         )
 ```
 
+Add column groups:
 ``` {r}
-epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels, colgroups=c("Imports", "Exports", "Trade balance"), colgroupspattern=c(3, 1, 2), colnames=rep(c("Levels (\\$billions)", "Share of total change"),3))
+epitable(tradebalance_fmt, 
+         rownamesvar=industry, 
+         rowlevels=thelevels, 
+         colgroups=c("Imports", "Exports", "Trade balance"), 
+         colgroupspattern=c(2, 2, 2), 
+         colnames=rep(c("Levels (\\$billions)", "Share of total change"),3)
+         )
 ```
 
-## More Examples
+## Combine tables
+epitable_append() combines multiple tables into one. Note also the use of header=FALSE for table2 below:
 
-```{r, echo=TRUE, results='asis'}
-library(dplyr)
-library(scales)
-thelevels <- tradebalance %>%
-  mutate(level = 3) %>%
-  mutate(level = ifelse(grepl("Total change|Agriculture, forestry|Mining|Manufacturing", .$industry), 1, level)) %>%
-  mutate(level = ifelse(grepl("Oil and gas|Minerals and ores|Nondurable goods|Industrial supplies", .$industry), 2, level))
-
-tradebalance_fmt <- tradebalance %>%  
-  mutate_at(vars(ends_with("level")), ~number(.,accuracy=0.1, big.mark=",")) %>% 
-  mutate_at(vars(ends_with("share")), ~percent(.,accuracy=0.1))
-
-epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels$level, colgroups=c("span 1", "span 2", "span 3"), colgroupspattern=c(3, 1, 2), colnames=c("import levels", "import shares", "import levels", "import shares", "import levels", "import shares"))
+``` {r}
+# add dollar sign to Total change
+data1 <- tradebalance_fmt %>% 
+  filter(industry == "Total change") %>% 
+  mutate_at(vars(ends_with("level")), ~paste0("$",.))
+data2 <- tradebalance_fmt %>% filter(industry != "Total change")
+table1 <- epitable(data1, 
+                   rownamesvar=industry, 
+                   colgroups = c("Imports", "Exports", "Trade balance"), 
+                   colgroupspattern = c(2, 2, 2), 
+                   colnames = rep(c("Levels (\\$billions)", "Share of total change"),3)
+                   )
+table2 <- epitable(data2, rownamesvar=industry, header=FALSE)
+epitable_append(table1, table2)
 ```
 

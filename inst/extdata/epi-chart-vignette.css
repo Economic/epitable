@@ -229,5 +229,7 @@ table {
 table th {
   border-width: 0;
 }
+/* for reasons I do not understand, there is an uppercase transformation here that does not occur on our website */
+.figure .figInner table th[scope="col"][colspan],.external-chartcard-info .figInner table th[scope="col"][colspan],.figure .figInner table th[scope="colgroup"][colspan],.external-chartcard-info .figInner table th[scope="colgroup"][colspan]{border-bottom:0;background:#fff;text-align:center;text-transform:none;font-weight:600;border-bottom:2px solid #ddd}
 
 /*END custom css*/
