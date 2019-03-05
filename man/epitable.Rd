@@ -8,7 +8,7 @@
 \usage{
 epitable(x, rownamesvar, rownames, colnames = NULL, colgroups = NULL,
   colgroupspattern = NULL, select = NULL, rowlevels = NULL,
-  file = NULL, selfcontained = FALSE)
+  header = TRUE, file = NULL, selfcontained = FALSE)
 
 \method{knit_print}{epitable}(x, ...)
 

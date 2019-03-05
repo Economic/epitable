@@ -9,9 +9,6 @@ Installation
 ------------
 
 ``` r
-#install the package
-devtools::install_github("Economic/epitable")
-
 ## install package and vignettes
 devtools::install_github("Economic/epitable", build_vignettes = TRUE)
 browseVignettes("epitable")

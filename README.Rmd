@@ -19,9 +19,6 @@ epitable is an R package that creates EPI-formatted HTML tables.
 ## Installation
 
 ```{r, eval = FALSE}
-#install the package
-devtools::install_github("Economic/epitable")
-
 ## install package and vignettes
 devtools::install_github("Economic/epitable", build_vignettes = TRUE)
 browseVignettes("epitable")
