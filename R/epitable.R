@@ -1,46 +1,83 @@
 # load EPI CSS
 epicss <-
   system.file("extdata", "epi-chart.css" ,package = "epitable") %>%
-  read_file()
+  read_file() %>%
+  paste("html * {font-family: 'Proxima Nova', 'Lato' !important;}\n") %>%
+  paste(".figure.figure-theme-clean{margin:0;border-top:none;}\n") %>%
+  paste(".figure.figure-theme-clean .figInner{border-bottom:none;}\n")
 
 # load complete test table for testing purposes
 testtable <- system.file("extdata", "testtable.html", package = "epitable")
 
+selfcontained_bodypre <- paste("<div class=\"figure figure-table figure-theme-clean\"><div class=\"figInner\">","\n")
+selfcontained_bodypost <- paste("</div></div>\n")
+
 # top matter for self-contained webpage
-selfcontained_top <- function(x) {
+selfcontained_top <- function() {
   htmlpage <- paste("<html>",
                     "<head>",
                     "<meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\">",
                     "<style>",
                     epicss,
-                    "html * {font-family: 'Proxima Nova', 'Lato' !important;}",
                     "</style>",
                     "</head>",
                     "<body>",
-                    "<div class=\"figure figure-table figure-theme-clean\"><div class=\"figBorder\"><div class=\"figInner\"><h4>boring chart</h4><div class=\"table-wrapper\">",
+                    selfcontained_bodypre,
                     "",
                     sep="\n")
   return(htmlpage)
 }
 
 # bottom matter for self-contained webpage
-selfcontained_bottom <- function(x) {
+selfcontained_bottom <- function() {
   htmlpage <- paste("",
-                    "</div></div></div></div>",
+                    selfcontained_bodypost,
                     "</body>",
                     "</html>",
                     sep="\n")
   return(htmlpage)
 }
 
+table_meat <- function(x,
+                       rownames,
+                       rowlevels,
+                       colnames=NULL,
+                       colgroups=NULL,
+                       colgroupspattern=NULL
+                       ) {
 
-
-table_meat <- function(x, rownamevec, rowlevels) {
-
-  table_input <- x
+  table_input <- x %>% as.data.frame()
 
   # begin table header
-  the_table <- paste0("\n<thead>","\n<tr><th scope=\"col\">hello</th></tr>")
+  the_table <- paste0("\n<thead>")
+
+  if (!is.null(colgroups) && !is.null(colgroupspattern)) {
+    the_table %<>% paste0("\n<tr>")
+    colgrouprownameheader <- ""
+    the_table %<>% paste0("<th scope=\"colgroup\">", colgrouprownameheader, "</th>")
+    for (col_j in 1:length(colgroups)) {
+      the_table %<>% paste0("<th colspan=\"", colgroupspattern[col_j], "\"scope=\"colgroup\">", colgroups[col_j], "</th>")
+    }
+#    <th scope="colgroup"></th>
+#    <th colspan="2" scope="colgroup">U.S. imports</th>
+#    <th class="table-division-left" colspan="2" scope="colgroup">U.S. exports</th>
+#    <th class="table-division-left" colspan="2" scope="colgroup">Trade balance</th>
+    the_table %<>% paste0("</tr>")
+  }
+
+  # begin column names
+  the_table %<>% paste0("\n<tr>")
+  # blank col above rownamesvar for now
+  rownameheader <- ""
+  the_table %<>% paste0("<th scope=\"col\">", rownameheader, "</th>")
+  if (is.null(colnames)) {
+    colnames <- colnames(x)
+  }
+  for (col_j in 1:length(colnames)) {
+    the_table %<>% paste0("<th scope=\"col\">", colnames[col_j], "</th>")
+  }
+  # end column names
+  the_table %<>% paste0("</tr>")
 
   # end table header
   the_table %<>% paste0("\n</thead>")
@@ -61,13 +98,13 @@ table_meat <- function(x, rownamevec, rowlevels) {
     }
 
     # row header
-    the_table %<>% paste0("\n<th scope=\"row\">", rownamevec[row_i], "</th>")
+    the_table %<>% paste0("\n<th scope=\"row\">", rownames[row_i], "</th>")
 
     style<-paste("style=\"font-variant-numeric: tabular-nums; text-align: right;\"")
 
     # loop over columns
-    for (col_j in 1:length(x[row_i,])) {
-      the_table %<>% paste("\n<td",style,">",x[[row_i,col_j]], "</td>")
+    for (col_j in 1:length(table_input[row_i,])) {
+      the_table %<>% paste("\n<td",style,">",table_input[[row_i,col_j]], "</td>")
     }
 
     #the_table %<>% paste("\n<td style=\"text-align: right;\">$403.2</td>")
@@ -99,56 +136,69 @@ table_meat <- function(x, rownamevec, rowlevels) {
 #' @export
 #' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_file
-#' @importFrom dplyr select pull
+#' @importFrom dplyr select pull mutate
 #' @importFrom rlang enquo
 #' @examples
 #' epitable()
 #'
 # epitable creates the table
 epitable <- function(x,
+                     rownamesvar,
                      rownames,
-                     rownamevec,
+                     colnames=NULL,
+                     colgroups=NULL,
+                     colgroupspattern=NULL,
+                     select=NULL,
                      rowlevels=NULL,
                      file=NULL,
-                     selfcontained=FALSE,
-                     example=FALSE) {
+                     selfcontained=FALSE
+                     ) {
 
-  x <- as.data.frame(x)
 
-  # checks on rownames and rownamevec
-  if (missing(rownames) && missing(rownamevec)) {
-    stop("You need to specify either rownames or rownamevec")
+  # checks on rownamesvar and rownames
+  if (missing(rownamesvar) && missing(rownames)) {
+    stop("You need to specify either rownamesvar or rownames")
   }
-  if (!missing(rownames) && !missing(rownamevec)) {
-    stop("You cannot specify both rownames or rownamevec. Pick one or the other.")
+  if (!missing(rownamesvar) && !missing(rownames)) {
+    stop("You cannot specify both rownamesvar and rownames. Pick one or the other.")
   }
-  # if using rownames clean up x so that it does not have rownames
-  # and assign rownamevec
-  if (!missing(rownames)) {
-    if (!(deparse(substitute(rownames)) %in% colnames(x))) {
-      stop("rownames needs to be a variable of your data")
+  # if using rownamesvar clean up x so that it does not have rownamesvar
+  # and assign rownames
+  if (!missing(rownamesvar)) {
+    if (!(deparse(substitute(rownamesvar)) %in% colnames(x))) {
+      stop("rownamesvar needs to be a variable of your data")
     }
-    rownamevec <- x %>% select(!!enquo(rownames)) %>% pull()
-    x %<>% select(-!!enquo(rownames))
+    rownames <- x %>% select(!!enquo(rownamesvar)) %>% pull()
+    x %<>% select(-!!enquo(rownamesvar))
   }
-  if (!missing(rownamevec) && (nrow(x) != length(rownamevec))) {
-    stop("rownamevec needs to have the same number of rows as your data")
+  if (!missing(rownames) && (nrow(x) != length(rownames))) {
+    stop("rownames needs to have the same number of rows as your data")
   }
 
-  # just for testing
-  if(example) {
-    the_table <- paste("<table>\n")
-    the_table %<>% paste(read_file(testtable))
-    the_table %<>% paste("\n</table>")
-  } else {
-    # create the table snippet
-    # begin the table
-    the_table <- paste("<table>\n")
-    # add the meat of the table
-    the_table %<>% paste0(table_meat(x, rownamevec=rownamevec, rowlevels=rowlevels),"\n")
-    # end the table
-    the_table %<>% paste("\n</table>")
+  if (!is.null(select)) {
+    x %<>% select(select)
   }
+
+  # make the meat of the table
+  the_meat <-
+    table_meat(
+      x,
+      rownames = rownames,
+      rowlevels = rowlevels,
+      colnames = colnames,
+      colgroups = colgroups,
+      colgroupspattern = colgroupspattern
+    )
+
+  # create the table snippet
+  # begin the table
+  the_table <- paste("<table>\n")
+
+  # add the meat
+  the_table %<>% paste0(the_meat,"\n")
+
+  # end the table
+  the_table %<>% paste("\n</table>")
 
   # if writing to file
   if(!is.null(file)) {
@@ -172,7 +222,7 @@ epitable <- function(x,
 #' @importFrom knitr asis_output
 #' @export
 knit_print.epitable<- function(x, ...){
-  asis_output(x)
+  paste(selfcontained_bodypre,x,selfcontained_bodypost) %>% asis_output()
 }
 
 #' @rdname epitable

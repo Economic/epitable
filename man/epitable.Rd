@@ -6,8 +6,9 @@
 \alias{print.epitable}
 \title{A EPI HTML Table Making Function}
 \usage{
-epitable(x, rownames, rownamevec, rowlevels = NULL, file = NULL,
-  selfcontained = FALSE, example = FALSE)
+epitable(x, rownamesvar, rownames, colnames = NULL, colgroups = NULL,
+  colgroupspattern = NULL, select = NULL, rowlevels = NULL,
+  file = NULL, selfcontained = FALSE)
 
 \method{knit_print}{epitable}(x, ...)
 
@@ -20,9 +21,9 @@ epitable(x, rownames, rownamevec, rowlevels = NULL, file = NULL,
 
 \item{selfcontained}{If writing to file, the default selfcontained=FALSE will write a table snippet. selfcontained=TRUE writes a complete html page, with header, body, etc.}
 
-\item{example}{Just for testing purposes.}
-
 \item{useViewer}{Set to false to show snippet in console.}
+
+\item{example}{Just for testing purposes.}
 }
 \description{
 This is the table making function.

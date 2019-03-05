@@ -1,0 +1,149 @@
+---
+title: "Introduction to epitable"
+#author: "Vignette Author"
+#date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    css: 
+      - !expr system.file("extdata", "epi-chart-vignette.css" ,package = "epitable")
+vignette: >
+  %\VignetteIndexEntry{Introduction to epitable}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+
+opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+  lines <- options$output.lines
+  if (is.null(lines)) {
+    return(hook_output(x, options))  # pass to default hook
+  }
+  x <- unlist(strsplit(x, "\n"))
+  more <- "..."
+  if (length(lines)==1) {        # first n lines
+    if (length(x) > lines) {
+      # truncate the output, but add ....
+      x <- c(head(x, lines), more)
+    }
+  } else {
+    x <- c(more, x[lines], more)
+  }
+  # paste these lines together
+  x <- paste(c(x, ""), collapse = "\n")
+  hook_output(x, options)
+})
+
+
+```
+epitable will print HTML tables according to EPI website specifications.
+
+To install, 
+```{r eval=FALSE}
+devtools::install_github("Economic/epitable")
+
+## install package and vignettes
+devtools::install_github("Economic/epitable", build_vignettes = TRUE)
+browseVignettes("epitable")
+```
+
+## Basic example
+epitable contains some example data on trade balances:
+```{r}
+library(epitable)
+tradebalance
+```
+
+Here is the simplest use of epitable:
+```{r}
+epitable(tradebalance, rownamesvar = industry)
+```
+
+Note that you must specify the row names, either as a variable in the above, or as vector:
+```{r, message=FALSE}
+library(dplyr)
+myrownames <- paste(c("My row"),seq(1:12))
+tradebalance %>% select(-industry) %>% epitable(rownames = myrownames)
+```
+
+## Output options
+As you've noticed, by default epitable's output shows up in the RStudio viewer. You can also write the table snippet to a file:
+```{r eval=FALSE}
+epitable(tradebalance, rownamesvar=industry), file = "mytable.html")
+```
+
+That file will only contain the snippet of HTML that is the table. To write a fully self-contained web page, use the selfcontained option:
+```{r eval=FALSE}
+epitable(tradebalance, rownamesvar=industry), file = "mytable.html", selfcontained=TRUE)
+```
+
+To display the raw HTML of the table snippet in the console, try
+
+```{r test, output.lines=10}
+print(epitable(tradebalance, rownamesvar=industry), useViewer=FALSE)
+```
+
+## Formatting entries (use the scales package)
+An easy way to format decimal points, percent signs, etc., is to use the scales package, which transforms columns of your dataset into character strings:
+
+```{r}
+library(scales)
+
+tradebalance_fmt <- tradebalance %>%  
+  mutate_at(vars(ends_with("level")), ~number(.,accuracy=0.1, big.mark=",")) %>% 
+  mutate_at(vars(ends_with("share")), ~percent(.,accuracy=0.1))
+
+epitable(tradebalance_fmt, rownamesvar=industry)
+```
+
+## Rows
+Row name indendation is handled by the rowlevels option:
+```{r}
+epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=rep(1:4,3))
+```
+
+Here is an example of how you might do this a little less randomly:
+```{r}
+thelevels <- tradebalance_fmt %>%
+  mutate(level = 3) %>%
+  mutate(level = ifelse(grepl("Total change|Agriculture, forestry|Mining|Manufacturing", .$industry), 1, level)) %>%
+  mutate(level = ifelse(grepl("Oil and gas|Minerals and ores|Nondurable goods|Industrial supplies", .$industry), 2, level)) %>% 
+  select(level) %>% 
+  pull()
+
+epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels)
+```
+
+## Columns
+``` {r}
+epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels, colnames=c("Import levels", "Import shares", "Export levels", "Export shares", "Trade balance levels", "Trade balance shares"))
+```
+
+``` {r}
+epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels, colgroups=c("Imports", "Exports", "Trade balance"), colgroupspattern=c(3, 1, 2), colnames=rep(c("Levels (\\$billions)", "Share of total change"),3))
+```
+
+## More Examples
+
+```{r, echo=TRUE, results='asis'}
+library(dplyr)
+library(scales)
+thelevels <- tradebalance %>%
+  mutate(level = 3) %>%
+  mutate(level = ifelse(grepl("Total change|Agriculture, forestry|Mining|Manufacturing", .$industry), 1, level)) %>%
+  mutate(level = ifelse(grepl("Oil and gas|Minerals and ores|Nondurable goods|Industrial supplies", .$industry), 2, level))
+
+tradebalance_fmt <- tradebalance %>%  
+  mutate_at(vars(ends_with("level")), ~number(.,accuracy=0.1, big.mark=",")) %>% 
+  mutate_at(vars(ends_with("share")), ~percent(.,accuracy=0.1))
+
+epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=thelevels$level, colgroups=c("span 1", "span 2", "span 3"), colgroupspattern=c(3, 1, 2), colnames=c("import levels", "import shares", "import levels", "import shares", "import levels", "import shares"))
+```
+
