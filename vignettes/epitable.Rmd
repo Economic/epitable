@@ -76,12 +76,12 @@ tradebalance %>% select(-industry) %>% epitable(rownames = myrownames)
 ## Output options
 As you've noticed, by default epitable's output shows up in the RStudio viewer. You can also write the table snippet to a file:
 ```{r eval=FALSE}
-epitable(tradebalance, rownamesvar=industry), file = "mytable.html")
+epitable(tradebalance, rownamesvar=industry, file = "mytable.html")
 ```
 
 That file will only contain the snippet of HTML that is the table. To write a fully self-contained web page, use the selfcontained option:
 ```{r eval=FALSE}
-epitable(tradebalance, rownamesvar=industry), file = "mytable.html", selfcontained=TRUE)
+epitable(tradebalance, rownamesvar=industry, file = "mytable.html", selfcontained=TRUE)
 ```
 
 To display the raw HTML of the table snippet in the console, try
