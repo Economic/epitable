@@ -10,7 +10,7 @@ Installation
 
 ``` r
 ## install package and vignettes
-devtools::install_github("Economic/epitable", build_vignettes = TRUE)
+devtools::install_github("Economic/epitable", build_opts = c("--no-resave-data", "--no-manual"))
 browseVignettes("epitable")
 ```
 
