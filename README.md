@@ -3,7 +3,7 @@
 epitable
 ========
 
-epitable is an R package that creates EPI-formatted HTML tables.
+epitable is an R package that creates HTML tables formatted for EPI's website.
 
 Installation
 ------------
