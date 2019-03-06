@@ -5,6 +5,11 @@ epitable
 
 epitable is an R package that creates HTML tables formatted for EPI's website.
 
+Documentation
+-------------
+
+<https://economic.github.io/epitable/>
+
 Installation
 ------------
 
@@ -14,18 +19,10 @@ devtools::install_github("Economic/epitable", build_opts = c("--no-resave-data",
 browseVignettes("epitable")
 ```
 
-Example
--------
-
-Basic use:
+Basic use
+---------
 
 ``` r
 library(epitable)
 epitable(tradebalance, rownamesvar = industry)
-```
-
-See the epitable vignette for more examples:
-
-``` r
-browseVignettes("epitable")
 ```

@@ -1,5 +1,5 @@
 ---
-title: "Introduction to epitable"
+title: "Introduction to epitable!"
 #author: "Vignette Author"
 #date: "`r Sys.Date()`"
 output: 

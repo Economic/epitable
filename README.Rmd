@@ -13,28 +13,22 @@ knitr::opts_chunk$set(
 )
 ```
 # epitable
-
 epitable is an R package that creates HTML tables formatted for EPI's website.
 
-## Installation
+## Documentation
+https://economic.github.io/epitable/
 
+## Installation
 ```{r, eval = FALSE}
 ## install package and vignettes
 devtools::install_github("Economic/epitable", build_opts = c("--no-resave-data", "--no-manual"))
 browseVignettes("epitable")
 ```
 
-## Example
-
-Basic use:
-
+## Basic use
 ```{r, eval = FALSE}
 library(epitable)
 epitable(tradebalance, rownamesvar = industry)
 ```
 
-See the epitable vignette for more examples:
 
-```{r, eval=FALSE}
-browseVignettes("epitable")
-```
