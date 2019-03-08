@@ -2689,7 +2689,7 @@ Leather and allied products
 <div id="extra-rows" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extra-rows" class="anchor"></a>Extra rows</h2>
-<p>epitable allows extra rows to be added to a table. The syntax is somewhat complicated (suggestions to make it better are very welcome!), but let’s see how it works with another example dataset <code>educwages</code> provided by the epitable package that contains mean wages by educational group:</p>
+<p>epitable allows extra rows to be added to a table. The syntax is somewhat complicated (suggestions to improve it are very welcome!), but let’s see how it works with another example dataset <code>educwages</code> provided by the epitable package that contains mean wages by educational group:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(educwages, <span class="dt">rownamesvar =</span> year)</code></pre></div>
 <div class="figure figure-table figure-theme-clean">
 <div class="figInner">
@@ -2905,7 +2905,7 @@ change
 </table>
 </div>
 </div>
-<p>The <code>stat=level</code> and <code>stat=change</code> amounts happen to be in dollars and percent, respectively, and we can indicate that by adding extra rows. First let’s format the data and create better column names:</p>
+<p>The <code>stat=level</code> and <code>stat=change</code> amounts happen to be in dollars and percent, respectively. We can make that more clear in the resulting epitable by adding extra rows. First let’s format the data and create legible column names:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">educwages_fmt &lt;-<span class="st"> </span>educwages <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_at</a></span>(
     <span class="kw"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"educ"</span>)), 
@@ -2924,7 +2924,7 @@ educwages_colnames &lt;-<span class="st"> </span><span class="kw"><a href="https
   <span class="st">"College graduate"</span>,
   <span class="st">"Advanced degree"</span>
 )</code></pre></div>
-<p>Now let’s add extra rows. To do this, include an argument called extrarowN that is a list of additional arguments, and the extra row will be added before row N of the data frame.</p>
+<p>Now let’s add extra rows. To do this, include an argument called extrarowN that is a list of additional arguments. The extra row will be added before row N of the table.</p>
 <p>The simplest example is to define the extrarowN list as the <code>name</code> of the row:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(educwages_fmt, 
          <span class="dt">rownamesvar =</span> year,
@@ -3333,7 +3333,7 @@ Annualized percent change
 </table>
 </div>
 </div>
-<p>Finally, the easiest table to read might be to include an additional list of <code>colgroups</code> in the extrarowX list. These require a vector of names and a vector of spanning patterns.</p>
+<p>Finally, the easiest table to read might be to include additional lists of <code>colgroups</code> in the extrarowX lists. These require a vector of names and a vector of spanning patterns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(educwages_fmt, 
          <span class="dt">rownamesvar =</span> year,
          <span class="dt">colnames =</span> educwages_colnames,

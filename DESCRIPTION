@@ -1,5 +1,5 @@
 Package: epitable
-Version: 0.0.1
+Version: 0.0.2
 Title: Make HTML Tables Compatible with EPI's Website
 Description: Generate EPI website-friendly HTML tables from a data frame.
 Authors@R: c(
