@@ -8,7 +8,7 @@
 \usage{
 epitable(x, rownamesvar, rownames, colnames = NULL, colgroups = NULL,
   select = NULL, rowlevels = NULL, header = TRUE, file = NULL,
-  selfcontained = FALSE)
+  selfcontained = FALSE, ...)
 
 \method{knit_print}{epitable}(x, ...)
 
@@ -34,6 +34,8 @@ epitable(x, rownamesvar, rownames, colnames = NULL, colgroups = NULL,
 \item{selfcontained}{If writing to file, the default selfcontained=FALSE will write a table snippet. selfcontained=TRUE writes a complete html page, with header, body, etc.}
 
 \item{useViewer}{When wrapping epitable in a print() command, set to FALSE to show snippet in console.}
+
+\item{extrarowX}{is used to add an extra row before row X of the table. See the vignettes for examples.}
 }
 \description{
 This is the table making function.

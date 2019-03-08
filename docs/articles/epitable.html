@@ -38,8 +38,8 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="https://github.com/economic/epitable">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="..//epitable">
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -52,7 +52,13 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
+</li>
+<li>
+  <a href="https://github.com/economic/epitable">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
 </li>
       </ul>
 </div>
@@ -1056,9 +1062,9 @@ Leather and allied products
 </div>
 </div>
 </div>
-<div id="rows" class="section level2">
+<div id="row-indendation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#rows" class="anchor"></a>Rows</h2>
+<a href="#row-indendation" class="anchor"></a>Row indendation</h2>
 <p>Row name indendation is handled by the rowlevels option:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(tradebalance_fmt, <span class="dt">rownamesvar=</span>industry, <span class="dt">rowlevels=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,<span class="dv">3</span>))</code></pre></div>
 <div class="figure figure-table figure-theme-clean">
@@ -2337,7 +2343,7 @@ Leather and allied products
 <div id="combine-tables" class="section level2">
 <h2 class="hasAnchor">
 <a href="#combine-tables" class="anchor"></a>Combine tables</h2>
-<p>epitable_append() combines multiple tables into one. Note also the use of header=FALSE for table2 below:</p>
+<p><code><a href="../reference/epitable_append.html">epitable_append()</a></code> combines multiple tables into one. Note also the use of <code>header=FALSE</code> for table2 below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># add dollar sign to Total change</span>
 data1 &lt;-<span class="st"> </span>tradebalance_fmt <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(industry <span class="op">==</span><span class="st"> "Total change"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -2345,7 +2351,7 @@ data1 &lt;-<span class="st"> </span>tradebalance_fmt <span class="op">%&gt;%</sp
 data2 &lt;-<span class="st"> </span>tradebalance_fmt <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(industry <span class="op">!=</span><span class="st"> "Total change"</span>)
 
 table1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(data1, 
-                   <span class="dt">rownamesvar=</span>industry,
+                   <span class="dt">rownamesvar =</span> industry,
                    <span class="dt">colnames =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Levels (</span><span class="ch">\\</span><span class="st">$billions)"</span>, <span class="st">"Share of total change"</span>),<span class="dv">3</span>),
                    <span class="dt">colgroups =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
                      <span class="dt">names =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Imports"</span>, <span class="st">"Exports"</span>, <span class="st">"Trade balance"</span>), 
@@ -2680,6 +2686,864 @@ Leather and allied products
 </div>
 </div>
 </div>
+<div id="extra-rows" class="section level2">
+<h2 class="hasAnchor">
+<a href="#extra-rows" class="anchor"></a>Extra rows</h2>
+<p>epitable allows extra rows to be added to a table. The syntax is somewhat complicated (suggestions to make it better are very welcome!), but let’s see how it works with another example dataset <code>educwages</code> provided by the epitable package that contains mean wages by educational group:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(educwages, <span class="dt">rownamesvar =</span> year)</code></pre></div>
+<div class="figure figure-table figure-theme-clean">
+<div class="figInner">
+<table class="table">
+<thead><tr>
+<th scope="col">
+</th>
+<th scope="col" style="text-align: right;">
+educ1
+</th>
+<th scope="col" style="text-align: right;">
+educ2
+</th>
+<th scope="col" style="text-align: right;">
+educ3
+</th>
+<th scope="col" style="text-align: right;">
+educ4
+</th>
+<th scope="col" style="text-align: right;">
+educ5
+</th>
+<th scope="col" style="text-align: right;">
+stat
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">
+2000
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+12.59
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+17.85
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+20.32
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+31.27
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+39.47
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+level
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+13.03
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+18.06
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+20.46
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+31.95
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+40.6
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+level
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+13.66
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+18.25
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+20.01
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+33.17
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+42.39
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+level
+</td>
+</tr>
+<tr>
+<th scope="row">
+2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+13.68
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+18.45
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+20.34
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+33.36
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+43.8
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+level
+</td>
+</tr>
+<tr>
+<th scope="row">
+2000–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.005
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.002
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.004
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.006
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+change
+</td>
+</tr>
+<tr>
+<th scope="row">
+2000–2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.005
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.002
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.001
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.003
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.004
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+change
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.004
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.002
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+-0.001
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.004
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.007
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+change
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.001
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.011
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.016
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.006
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.033
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+change
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The <code>stat=level</code> and <code>stat=change</code> amounts happen to be in dollars and percent, respectively, and we can indicate that by adding extra rows. First let’s format the data and create better column names:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">educwages_fmt &lt;-<span class="st"> </span>educwages <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_at</a></span>(
+    <span class="kw"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"educ"</span>)), 
+    <span class="op">~</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(
+      stat<span class="op">==</span><span class="st">"level"</span>, 
+      <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"$"</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/scales/topics/number_format">number</a></span>(., <span class="dt">accuracy =</span> <span class="fl">0.11</span>)), 
+      <span class="kw"><a href="https://www.rdocumentation.org/packages/scales/topics/number_format">percent</a></span>(.,<span class="dt">accuracy=</span><span class="fl">0.1</span>)
+    )
+  ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(year,<span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"educ"</span>))
+
+educwages_colnames &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(
+  <span class="st">"Less than high school"</span>,
+  <span class="st">"High school graduate"</span>,
+  <span class="st">"Some college"</span>,
+  <span class="st">"College graduate"</span>,
+  <span class="st">"Advanced degree"</span>
+)</code></pre></div>
+<p>Now let’s add extra rows. To do this, include an argument called extrarowN that is a list of additional arguments, and the extra row will be added before row N of the data frame.</p>
+<p>The simplest example is to define the extrarowN list as the <code>name</code> of the row:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(educwages_fmt, 
+         <span class="dt">rownamesvar =</span> year,
+         <span class="dt">colnames =</span> educwages_colnames,
+         <span class="dt">extrarow1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">name =</span> <span class="st">"Levels"</span>),
+         <span class="dt">extrarow5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">name =</span> <span class="st">"Annualized percent changes"</span>)
+)</code></pre></div>
+<div class="figure figure-table figure-theme-clean">
+<div class="figInner">
+<table class="table">
+<thead><tr>
+<th scope="col">
+</th>
+<th scope="col" style="text-align: right;">
+Less than high school
+</th>
+<th scope="col" style="text-align: right;">
+High school graduate
+</th>
+<th scope="col" style="text-align: right;">
+Some college
+</th>
+<th scope="col" style="text-align: right;">
+College graduate
+</th>
+<th scope="col" style="text-align: right;">
+Advanced degree
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<th colspan="8" scope="row">
+Levels
+</th>
+</tr>
+<tr>
+<th scope="row">
+2000
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$12.54
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$17.82
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.35
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$31.24
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$39.49
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$12.98
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.04
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.46
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$31.90
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$40.59
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$13.64
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.26
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.02
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$33.22
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$42.35
+</td>
+</tr>
+<tr>
+<th scope="row">
+2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$13.64
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.48
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.35
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$33.33
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$43.78
+</td>
+</tr>
+<tr>
+<th colspan="8" scope="row">
+Annualized percent changes
+</th>
+</tr>
+<tr>
+<th scope="row">
+2000–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.5%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.0%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.6%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2000–2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.5%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.3%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+-0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.7%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+1.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+1.6%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.6%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+3.3%
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>You could also use what EPI’s website calls “pseudoheader” rows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(educwages_fmt, 
+         <span class="dt">rownamesvar =</span> year,
+         <span class="dt">colnames =</span> educwages_colnames,
+         <span class="dt">extrarow1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">name =</span> <span class="st">"Levels"</span>, <span class="dt">pseudoheader=</span><span class="ot">TRUE</span>),
+         <span class="dt">extrarow5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">name =</span> <span class="st">"Annualized percent change"</span>, <span class="dt">pseudoheader=</span><span class="ot">TRUE</span>)
+)</code></pre></div>
+<div class="figure figure-table figure-theme-clean">
+<div class="figInner">
+<table class="table">
+<thead><tr>
+<th scope="col">
+</th>
+<th scope="col" style="text-align: right;">
+Less than high school
+</th>
+<th scope="col" style="text-align: right;">
+High school graduate
+</th>
+<th scope="col" style="text-align: right;">
+Some college
+</th>
+<th scope="col" style="text-align: right;">
+College graduate
+</th>
+<th scope="col" style="text-align: right;">
+Advanced degree
+</th>
+</tr></thead>
+<tbody>
+<tr class="table-pseudo-header">
+<th colspan="8" scope="row">
+Levels
+</th>
+</tr>
+<tr>
+<th scope="row">
+2000
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$12.54
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$17.82
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.35
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$31.24
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$39.49
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$12.98
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.04
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.46
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$31.90
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$40.59
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$13.64
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.26
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.02
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$33.22
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$42.35
+</td>
+</tr>
+<tr>
+<th scope="row">
+2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$13.64
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.48
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.35
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$33.33
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$43.78
+</td>
+</tr>
+<tr class="table-pseudo-header">
+<th colspan="8" scope="row">
+Annualized percent change
+</th>
+</tr>
+<tr>
+<th scope="row">
+2000–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.5%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.0%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.6%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2000–2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.5%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.3%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+-0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.7%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+1.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+1.6%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.6%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+3.3%
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Finally, the easiest table to read might be to include an additional list of <code>colgroups</code> in the extrarowX list. These require a vector of names and a vector of spanning patterns.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(educwages_fmt, 
+         <span class="dt">rownamesvar =</span> year,
+         <span class="dt">colnames =</span> educwages_colnames,
+         <span class="dt">extrarow1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">colgroups =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">names =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Levels"</span>), 
+                                           <span class="dt">pattern =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>))),
+         <span class="dt">extrarow5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">colgroups =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">names =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Annualized percent changes"</span>),
+                                           <span class="dt">pattern =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>)))
+)</code></pre></div>
+<div class="figure figure-table figure-theme-clean">
+<div class="figInner">
+<table class="table">
+<thead><tr>
+<th scope="col">
+</th>
+<th scope="col" style="text-align: right;">
+Less than high school
+</th>
+<th scope="col" style="text-align: right;">
+High school graduate
+</th>
+<th scope="col" style="text-align: right;">
+Some college
+</th>
+<th scope="col" style="text-align: right;">
+College graduate
+</th>
+<th scope="col" style="text-align: right;">
+Advanced degree
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<th colspan="1" scope="row">
+</th>
+<th colspan="5" style="text-align: center;">
+Levels
+</th>
+</tr>
+<tr>
+<th scope="row">
+2000
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$12.54
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$17.82
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.35
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$31.24
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$39.49
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$12.98
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.04
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.46
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$31.90
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$40.59
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$13.64
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.26
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.02
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$33.22
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$42.35
+</td>
+</tr>
+<tr>
+<th scope="row">
+2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$13.64
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$18.48
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$20.35
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$33.33
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+$43.78
+</td>
+</tr>
+<tr>
+<th colspan="1" scope="row">
+</th>
+<th colspan="5" style="text-align: center;">
+Annualized percent changes
+</th>
+</tr>
+<tr>
+<th scope="row">
+2000–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.5%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.0%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.6%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2000–2007
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.5%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.3%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2007–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.2%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+-0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.4%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.7%
+</td>
+</tr>
+<tr>
+<th scope="row">
+2017–2018
+</th>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+1.1%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+1.6%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+0.6%
+</td>
+<td style="font-variant-numeric: tabular-nums; text-align: right;">
+3.3%
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -2690,9 +3554,10 @@ Leather and allied products
 <li><a href="#basic-example">Basic example</a></li>
       <li><a href="#output-options">Output options</a></li>
       <li><a href="#formatting-entries">Formatting entries</a></li>
-      <li><a href="#rows">Rows</a></li>
+      <li><a href="#row-indendation">Row indendation</a></li>
       <li><a href="#headers">Headers</a></li>
       <li><a href="#combine-tables">Combine tables</a></li>
+      <li><a href="#extra-rows">Extra rows</a></li>
       </ul>
 </div>
       </div>

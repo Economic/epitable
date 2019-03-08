@@ -45,8 +45,11 @@ table_meat <- function(x,
                        rowlevels,
                        colnames,
                        colgroups,
-                       header
+                       header,
+                       ...
                        ) {
+
+  dotsargs <- list(...)
 
   table_input <- x %>% as.data.frame()
 
@@ -103,7 +106,51 @@ table_meat <- function(x,
   # loop over rows
   for (row_i in 1:nrow(x)) {
 
-    # begin row
+    # add extra row if necessary
+
+    # set up arguments for extra row
+    extrarowlist <- dotsargs[[paste0("extrarow",row_i)]]
+    colgroupspattern <- extrarowlist$colgroups$pattern
+    colgroupsnames <- extrarowlist$colgroups$names
+    if (!is.null(colgroupspattern) && !is.null(colgroupsnames)) {
+      extracolgroups <- TRUE
+    } else extracolgroups <- FALSE
+
+    if (!is.null(extrarowlist)) {
+      # begin extra row
+
+      if (is.null(extrarowlist$pseudoheader)) {
+        extrarowlist$pseudoheader <- FALSE
+      }
+      if (extrarowlist$pseudoheader) {
+        trclass<-paste0(" class=\"table-pseudo-header\"")
+      } else trclass <-NULL
+
+      the_table %<>% paste0("\n<tr",trclass,">")
+
+      # add name to column 0
+        if (!extracolgroups) {
+          colspan0length <- length(table_input[,1])
+        } else colspan0length <- 1
+        colspanstr <- paste0(" colspan=\"", colspan0length, "\"")
+
+
+        the_table %<>% paste0("\n<th", colspanstr, " scope=\"row\">", extrarowlist$name, "</th>")
+
+
+      if (extracolgroups) {
+        for (col_j in 1:length(colgroupspattern)) {
+          the_table %<>% paste0("\n<th colspan=\"", colgroupspattern[col_j], "\" style=\"text-align: center;\">", colgroupsnames[col_j], "</th>")
+        }
+      }
+
+      # end extra row
+      the_table %<>% paste("\n</tr>")
+    }
+
+
+
+    # begin actual row
     if (is.null(rowlevels)) {
       the_table %<>% paste0("\n<tr>")
     } else if (rowlevels[row_i] == 1) {
@@ -145,6 +192,7 @@ table_meat <- function(x,
 #' @param header Set to FALSE if you want suppress the column headers.
 #' @param file is the filename for saving the table snippet as a file. By default, this is NULL and epitable() does not write to a file.
 #' @param selfcontained If writing to file, the default selfcontained=FALSE will write a table snippet. selfcontained=TRUE writes a complete html page, with header, body, etc.
+#' @param extrarowX is used to add an extra row before row X of the table. See the vignettes for examples.
 #' @keywords html tables
 #' @export
 #' @importFrom magrittr %>% %<>%
@@ -165,9 +213,9 @@ epitable <- function(x,
                      rowlevels=NULL,
                      header=TRUE,
                      file=NULL,
-                     selfcontained=FALSE
+                     selfcontained=FALSE,
+                     ...
                      ) {
-
 
   # checks on rownamesvar and rownames
   if (missing(rownamesvar) && missing(rownames)) {
@@ -201,7 +249,8 @@ epitable <- function(x,
       rowlevels = rowlevels,
       colnames = colnames,
       colgroups = colgroups,
-      header = header
+      header = header,
+      ...
     )
 
   # create the table snippet

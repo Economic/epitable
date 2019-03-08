@@ -94,7 +94,7 @@ tradebalance_fmt <- tradebalance %>%
 epitable(tradebalance_fmt, rownamesvar=industry)
 ```
 
-## Rows
+## Row indendation
 Row name indendation is handled by the rowlevels option:
 ```{r}
 epitable(tradebalance_fmt, rownamesvar=industry, rowlevels=rep(1:4,3))
@@ -140,7 +140,7 @@ epitable(tradebalance_fmt,
 ```
 
 ## Combine tables
-epitable_append() combines multiple tables into one. Note also the use of header=FALSE for table2 below:
+`epitable_append()` combines multiple tables into one. Note also the use of `header=FALSE` for table2 below:
 
 ``` {r}
 # add dollar sign to Total change
@@ -150,7 +150,7 @@ data1 <- tradebalance_fmt %>%
 data2 <- tradebalance_fmt %>% filter(industry != "Total change")
 
 table1 <- epitable(data1, 
-                   rownamesvar=industry,
+                   rownamesvar = industry,
                    colnames = rep(c("Levels (\\$billions)", "Share of total change"),3),
                    colgroups = list(
                      names = c("Imports", "Exports", "Trade balance"), 
@@ -163,5 +163,70 @@ table2 <- epitable(data2,
                    )
 
 epitable_append(table1, table2)
+```
+
+## Extra rows
+epitable allows extra rows to be added to a table. The syntax is somewhat complicated (suggestions to improve it are very welcome!), but let's see how it works with another example dataset `educwages` provided by the epitable package that contains mean wages by educational group:
+
+``` {r}
+epitable(educwages, rownamesvar = year)
+```
+
+The `stat=level` and `stat=change` amounts happen to be in dollars and percent, respectively. We can make that more clear in the resulting epitable by adding extra rows. First let's format the data and create legible column names:
+
+``` {r}
+educwages_fmt <- educwages %>% 
+  mutate_at(
+    vars(starts_with("educ")), 
+    ~ifelse(
+      stat=="level", 
+      paste0("$",number(., accuracy = 0.11)), 
+      percent(.,accuracy=0.1)
+    )
+  ) %>% 
+  select(year,starts_with("educ"))
+
+educwages_colnames <- c(
+  "Less than high school",
+  "High school graduate",
+  "Some college",
+  "College graduate",
+  "Advanced degree"
+)
+```
+
+Now let's add extra rows. To do this, include an argument called extrarowN that is a list of additional arguments. The extra row will be added before row N of the table.
+
+The simplest example is to define the extrarowN list as the `name` of the row:
+
+``` {r}
+epitable(educwages_fmt, 
+         rownamesvar = year,
+         colnames = educwages_colnames,
+         extrarow1 = list(name = "Levels"),
+         extrarow5 = list(name = "Annualized percent changes")
+)
+```
+
+You could also use what EPI's website calls "pseudoheader" rows:
+``` {r}
+epitable(educwages_fmt, 
+         rownamesvar = year,
+         colnames = educwages_colnames,
+         extrarow1 = list(name = "Levels", pseudoheader=TRUE),
+         extrarow5 = list(name = "Annualized percent change", pseudoheader=TRUE)
+)
+```
+
+Finally, the easiest table to read might be to include additional lists of `colgroups` in the extrarowX lists. These require a vector of names and a vector of spanning patterns.
+``` {r}
+epitable(educwages_fmt, 
+         rownamesvar = year,
+         colnames = educwages_colnames,
+         extrarow1 = list(colgroups = list(names = c("Levels"), 
+                                           pattern = c(5))),
+         extrarow5 = list(colgroups = list(names = c("Annualized percent changes"),
+                                           pattern = c(5)))
+)
 ```
 

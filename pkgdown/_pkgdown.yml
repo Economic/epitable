@@ -9,8 +9,10 @@ navbar:
     href: articles/epitable.html
   - text: Reference
     href: reference/index.html
-  - text: Changelog
+  - text: News
     href: news/index.html
-  left:
   - icon: fa-github fa-lg
     href: https://github.com/economic/epitable
+  left:
+  - icon: fa-home fa-lg
+    href: /epitable
