@@ -2005,11 +2005,12 @@ Leather and allied products
 </div>
 <p>Add column groups:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(tradebalance_fmt, 
-         <span class="dt">rownamesvar=</span>industry, 
-         <span class="dt">rowlevels=</span>thelevels,
-         <span class="dt">colgroups=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Imports"</span>, <span class="st">"Exports"</span>, <span class="st">"Trade balance"</span>), 
-         <span class="dt">colgroupspattern=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>), 
-         <span class="dt">colnames=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Levels (</span><span class="ch">\\</span><span class="st">$billions)"</span>, <span class="st">"Share of total change"</span>),<span class="dv">3</span>)
+         <span class="dt">rownamesvar =</span> industry, 
+         <span class="dt">rowlevels =</span> thelevels,
+         <span class="dt">colnames =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Levels (</span><span class="ch">\\</span><span class="st">$billions)"</span>, <span class="st">"Share of total change"</span>), <span class="dv">3</span>),
+         <span class="dt">colgroups =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
+           <span class="dt">names =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Imports"</span>, <span class="st">"Exports"</span>, <span class="st">"Trade balance"</span>), 
+           <span class="dt">pattern =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))
          )</code></pre></div>
 <div class="figure figure-table figure-theme-clean">
 <div class="figInner">
@@ -2342,16 +2343,20 @@ data1 &lt;-<span class="st"> </span>tradebalance_fmt <span class="op">%&gt;%</sp
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(industry <span class="op">==</span><span class="st"> "Total change"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_at</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">ends_with</a></span>(<span class="st">"level"</span>)), <span class="op">~</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"$"</span>,.))
 data2 &lt;-<span class="st"> </span>tradebalance_fmt <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(industry <span class="op">!=</span><span class="st"> "Total change"</span>)
+
 table1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(data1, 
                    <span class="dt">rownamesvar=</span>industry,
-                   <span class="dt">colgroups =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Imports"</span>, <span class="st">"Exports"</span>, <span class="st">"Trade balance"</span>), 
-                   <span class="dt">colgroupspattern =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>), 
-                   <span class="dt">colnames =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Levels (</span><span class="ch">\\</span><span class="st">$billions)"</span>, <span class="st">"Share of total change"</span>),<span class="dv">3</span>)
+                   <span class="dt">colnames =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Levels (</span><span class="ch">\\</span><span class="st">$billions)"</span>, <span class="st">"Share of total change"</span>),<span class="dv">3</span>),
+                   <span class="dt">colgroups =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
+                     <span class="dt">names =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Imports"</span>, <span class="st">"Exports"</span>, <span class="st">"Trade balance"</span>), 
+                     <span class="dt">pattern =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))
                    )
 table2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/epitable.html">epitable</a></span>(data2, 
                    <span class="dt">rownamesvar=</span>industry, 
                    <span class="dt">rowlevels=</span>thelevels[<span class="dv">2</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(thelevels)], 
-                   <span class="dt">header=</span><span class="ot">FALSE</span>)
+                   <span class="dt">header=</span><span class="ot">FALSE</span>
+                   )
+
 <span class="kw"><a href="../reference/epitable_append.html">epitable_append</a></span>(table1, table2)</code></pre></div>
 <div class="figure figure-table figure-theme-clean">
 <div class="figInner">

@@ -130,11 +130,12 @@ epitable(tradebalance_fmt,
 Add column groups:
 ``` {r}
 epitable(tradebalance_fmt, 
-         rownamesvar=industry, 
-         rowlevels=thelevels,
-         colgroups=c("Imports", "Exports", "Trade balance"), 
-         colgroupspattern=c(2, 2, 2), 
-         colnames=rep(c("Levels (\\$billions)", "Share of total change"),3)
+         rownamesvar = industry, 
+         rowlevels = thelevels,
+         colnames = rep(c("Levels (\\$billions)", "Share of total change"), 3),
+         colgroups = list(
+           names = c("Imports", "Exports", "Trade balance"), 
+           pattern = c(2, 2, 2))
          )
 ```
 
@@ -147,16 +148,20 @@ data1 <- tradebalance_fmt %>%
   filter(industry == "Total change") %>% 
   mutate_at(vars(ends_with("level")), ~paste0("$",.))
 data2 <- tradebalance_fmt %>% filter(industry != "Total change")
+
 table1 <- epitable(data1, 
                    rownamesvar=industry,
-                   colgroups = c("Imports", "Exports", "Trade balance"), 
-                   colgroupspattern = c(2, 2, 2), 
-                   colnames = rep(c("Levels (\\$billions)", "Share of total change"),3)
+                   colnames = rep(c("Levels (\\$billions)", "Share of total change"),3),
+                   colgroups = list(
+                     names = c("Imports", "Exports", "Trade balance"), 
+                     pattern = c(2, 2, 2))
                    )
 table2 <- epitable(data2, 
                    rownamesvar=industry, 
                    rowlevels=thelevels[2:length(thelevels)], 
-                   header=FALSE)
+                   header=FALSE
+                   )
+
 epitable_append(table1, table2)
 ```
 

@@ -113,14 +113,14 @@
     </div>
 
     <pre class="usage"><span class='fu'>epitable</span>(<span class='no'>x</span>, <span class='no'>rownamesvar</span>, <span class='no'>rownames</span>, <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>colgroups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>colgroupspattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>select</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rowlevels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>header</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>selfcontained</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>select</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rowlevels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>header</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>selfcontained</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for epitable</span>
 <span class='fu'>knit_print</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for epitable</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>x</span>, <span class='kw'>useViewer</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>x</span>, <span class='kw'>useViewer</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,6 +128,30 @@
     <tr>
       <th>x</th>
       <td><p>is the data</p></td>
+    </tr>
+    <tr>
+      <th>rownamesvar</th>
+      <td><p>variable name in x that identifies the rownames (either rownamesvar or rownames is required)</p></td>
+    </tr>
+    <tr>
+      <th>rownames</th>
+      <td><p>vector that identifies the rownames (either rownames or rownamesvar is required)</p></td>
+    </tr>
+    <tr>
+      <th>colnames</th>
+      <td><p>vector of column names</p></td>
+    </tr>
+    <tr>
+      <th>colgroups</th>
+      <td><p>is a list of two specifically named vectors, names and pattern, that determine the column group names and the spanning pattern. The spanning pattern is the number of columns grouped under each column group. For example, colgroups = list(names = c("a group" "another group"), pattern = c(3, 2)) establishes two column groups, spanning 3 and 2 columns, respectively. See the vignettes for more examples.</p></td>
+    </tr>
+    <tr>
+      <th>rowlevels</th>
+      <td><p>is a vector of integers indicating the indentation level (row-level) of each row. EPI's CSS allows for row levels 1 through 4.</p></td>
+    </tr>
+    <tr>
+      <th>header</th>
+      <td><p>Set to FALSE if you want suppress the column headers.</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -139,18 +163,133 @@
     </tr>
     <tr>
       <th>useViewer</th>
-      <td><p>Set to false to show snippet in console.</p></td>
-    </tr>
-    <tr>
-      <th>example</th>
-      <td><p>Just for testing purposes.</p></td>
+      <td><p>When wrapping epitable in a print() command, set to FALSE to show snippet in console.</p></td>
     </tr>
     </table>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>epitable</span>()</div><div class='output co'>#&gt; <span class='error'>Error in epitable(): You need to specify either rownamesvar or rownames</span></div><div class='input'>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># The output will print to the Rstudio viewer:</span>
+<span class='fu'>epitable</span>(<span class='no'>tradebalance</span>, <span class='kw'>rownamesvar</span> <span class='kw'>=</span> <span class='no'>industry</span>)
+
+<span class='co'># The output will print to the console:</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'>epitable</span>(<span class='no'>tradebalance</span>, <span class='kw'>rownamesvar</span> <span class='kw'>=</span> <span class='no'>industry</span>), <span class='kw'>useViewer</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; &lt;table&gt;
+#&gt; 
+#&gt; &lt;thead&gt;
+#&gt; &lt;tr&gt;&lt;th scope="col"&gt;&lt;/th&gt; &lt;th scope="col" style="text-align: right;" &gt; import_level &lt;/th&gt; &lt;th scope="col" style="text-align: right;" &gt; import_share &lt;/th&gt; &lt;th scope="col" style="text-align: right;" &gt; export_level &lt;/th&gt; &lt;th scope="col" style="text-align: right;" &gt; export_share &lt;/th&gt; &lt;th scope="col" style="text-align: right;" &gt; balance_level &lt;/th&gt; &lt;th scope="col" style="text-align: right;" &gt; balance_share &lt;/th&gt;&lt;/tr&gt;
+#&gt; &lt;/thead&gt; 
+#&gt; &lt;tbody&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Total change&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 403.2 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 111.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -292.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 1 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Agriculture, forestry, fishing, and hunting&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 2.3 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.006 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 17.3 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.156 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 15 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -0.051 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Mining&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -0.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 8.5 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.077 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 8.6 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -0.03 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Oil and gas&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 6.8 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.062 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 6.8 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -0.023 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Minerals and ores&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 1.7 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.015 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 1.6 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -0.005 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Manufacturing&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 400.8 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.994 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 80 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.72 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -320.8 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 1.098 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Nondurable goods&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 44.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.109 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 3.5 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.032 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -40.6 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.139 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Food&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 3.2 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.008 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 2.5 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.023 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -0.6 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.002 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Beverage and tobacco products&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.2 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.002 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Textile mills and textile product mills&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 11.8 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.029 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.4 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.004 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -11.4 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.039 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Apparel&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 20.7 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.051 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.1 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.001 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -20.7 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.071 &lt;/td&gt; 
+#&gt; &lt;/tr&gt;
+#&gt; &lt;tr&gt;
+#&gt; &lt;th scope="row"&gt;Leather and allied products&lt;/th&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 8.3 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.02 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.3 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.003 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; -7.9 &lt;/td&gt; 
+#&gt; &lt;td style="font-variant-numeric: tabular-nums; text-align: right;" &gt; 0.027 &lt;/td&gt; 
+#&gt; &lt;/tr&gt; 
+#&gt; &lt;/tbody&gt;
+#&gt;  
+#&gt; &lt;/table&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

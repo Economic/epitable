@@ -43,9 +43,8 @@ selfcontained_bottom <- function() {
 table_meat <- function(x,
                        rownames,
                        rowlevels,
-                       colnames=NULL,
-                       colgroups=NULL,
-                       colgroupspattern=NULL,
+                       colnames,
+                       colgroups,
                        header
                        ) {
 
@@ -55,17 +54,20 @@ table_meat <- function(x,
     # begin table header
     the_header <- paste0("\n<thead>")
 
-    if (!is.null(colgroups) && !is.null(colgroupspattern)) {
+    if (!is.null(colgroups)) {
+      colgroupsnames <- colgroups$names
+      colgroupspattern <- colgroups$pattern
+
       # begin column groups
       the_header %<>% paste0("\n<tr>")
       # blank first column
       the_header %<>% paste0("\n<th scope=\"colgroup\">","</th>")
-      for (col_j in 1:length(colgroups)) {
+      for (col_j in 1:length(colgroupspattern)) {
         if (col_j == 1) {
           class<-NULL
         } else class<-paste("class=\"table-division-left\" ")
 
-        the_header %<>% paste0("\n<th ", class, "colspan=\"", colgroupspattern[col_j], "\" scope=\"colgroup\">", colgroups[col_j], "</th>")
+        the_header %<>% paste0("\n<th ", class, "colspan=\"", colgroupspattern[col_j], "\" scope=\"colgroup\">", colgroupsnames[col_j], "</th>")
       }
 
       # end column groups
@@ -135,9 +137,14 @@ table_meat <- function(x,
 #'
 #' @description This is the table making function.
 #' @param x is the data
+#' @param rownamesvar variable name in x that identifies the rownames (either rownamesvar or rownames is required)
+#' @param rownames vector that identifies the rownames (either rownames or rownamesvar is required)
+#' @param colnames vector of column names
+#' @param colgroups is a list of two specifically named vectors, names and pattern, that determine the column group names and the spanning pattern. The spanning pattern is the number of columns grouped under each column group. For example, colgroups = list(names = c("a group" "another group"), pattern = c(3, 2)) establishes two column groups, spanning 3 and 2 columns, respectively. See the vignettes for more examples.
+#' @param rowlevels is a vector of integers indicating the indentation level (row-level) of each row. EPI's CSS allows for row levels 1 through 4.
+#' @param header Set to FALSE if you want suppress the column headers.
 #' @param file is the filename for saving the table snippet as a file. By default, this is NULL and epitable() does not write to a file.
 #' @param selfcontained If writing to file, the default selfcontained=FALSE will write a table snippet. selfcontained=TRUE writes a complete html page, with header, body, etc.
-#' @param example Just for testing purposes.
 #' @keywords html tables
 #' @export
 #' @importFrom magrittr %>% %<>%
@@ -145,7 +152,8 @@ table_meat <- function(x,
 #' @importFrom dplyr select pull mutate
 #' @importFrom rlang enquo
 #' @examples
-#' epitable()
+#' # The output will print to the Rstudio viewer:
+#' epitable(tradebalance, rownamesvar = industry)
 #'
 # epitable creates the table
 epitable <- function(x,
@@ -153,7 +161,6 @@ epitable <- function(x,
                      rownames,
                      colnames=NULL,
                      colgroups=NULL,
-                     colgroupspattern=NULL,
                      select=NULL,
                      rowlevels=NULL,
                      header=TRUE,
@@ -194,7 +201,6 @@ epitable <- function(x,
       rowlevels = rowlevels,
       colnames = colnames,
       colgroups = colgroups,
-      colgroupspattern = colgroupspattern,
       header = header
     )
 
@@ -234,9 +240,12 @@ knit_print.epitable<- function(x, ...){
 }
 
 #' @rdname epitable
-#' @param useViewer Set to false to show snippet in console.
+#' @param useViewer When wrapping epitable in a print() command, set to FALSE to show snippet in console.
 #' @export
-print.epitable <- function(x, useViewer = TRUE, ...) {
+#' @examples
+#' # The output will print to the console:
+#' print(epitable(tradebalance, rownamesvar = industry), useViewer=FALSE)
+print.epitable <- function(x, useViewer=TRUE) {
   # taken from https://stackoverflow.com/a/22871109
 
   # create temp self-contained html page for viewer
@@ -277,8 +286,6 @@ verify_class_epitable <- function(x) {
 #' @param ... Comma separated tables.
 #' @keywords html tables
 #' @export
-#' @examples
-#' epitable_append()
 epitable_append <- function(..., file) {
   # confirm all arguments have class epitable
   verified <- lapply(list(...), verify_class_epitable) %>% unlist() %>% all()

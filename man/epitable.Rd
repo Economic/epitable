@@ -7,30 +7,43 @@
 \title{A EPI HTML Table Making Function}
 \usage{
 epitable(x, rownamesvar, rownames, colnames = NULL, colgroups = NULL,
-  colgroupspattern = NULL, select = NULL, rowlevels = NULL,
-  header = TRUE, file = NULL, selfcontained = FALSE)
+  select = NULL, rowlevels = NULL, header = TRUE, file = NULL,
+  selfcontained = FALSE)
 
 \method{knit_print}{epitable}(x, ...)
 
-\method{print}{epitable}(x, useViewer = TRUE, ...)
+\method{print}{epitable}(x, useViewer = TRUE)
 }
 \arguments{
 \item{x}{is the data}
+
+\item{rownamesvar}{variable name in x that identifies the rownames (either rownamesvar or rownames is required)}
+
+\item{rownames}{vector that identifies the rownames (either rownames or rownamesvar is required)}
+
+\item{colnames}{vector of column names}
+
+\item{colgroups}{is a list of two specifically named vectors, names and pattern, that determine the column group names and the spanning pattern. The spanning pattern is the number of columns grouped under each column group. For example, colgroups = list(names = c("a group" "another group"), pattern = c(3, 2)) establishes two column groups, spanning 3 and 2 columns, respectively. See the vignettes for more examples.}
+
+\item{rowlevels}{is a vector of integers indicating the indentation level (row-level) of each row. EPI's CSS allows for row levels 1 through 4.}
+
+\item{header}{Set to FALSE if you want suppress the column headers.}
 
 \item{file}{is the filename for saving the table snippet as a file. By default, this is NULL and epitable() does not write to a file.}
 
 \item{selfcontained}{If writing to file, the default selfcontained=FALSE will write a table snippet. selfcontained=TRUE writes a complete html page, with header, body, etc.}
 
-\item{useViewer}{Set to false to show snippet in console.}
-
-\item{example}{Just for testing purposes.}
+\item{useViewer}{When wrapping epitable in a print() command, set to FALSE to show snippet in console.}
 }
 \description{
 This is the table making function.
 }
 \examples{
-epitable()
+# The output will print to the Rstudio viewer:
+epitable(tradebalance, rownamesvar = industry)
 
+# The output will print to the console:
+print(epitable(tradebalance, rownamesvar = industry), useViewer=FALSE)
 }
 \keyword{html}
 \keyword{tables}

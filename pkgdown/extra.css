@@ -26,7 +26,9 @@ for reasons I do not understand, there is an uppercase transformation here that 
 
 
 /*BEGIN custom css for pkgdown site*/
-
+body {
+  font-size: 16px;
+}
 /*END custom css for pkgdown site*/
 
 

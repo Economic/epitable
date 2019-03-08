@@ -12,8 +12,5 @@ epitable_append(..., file)
 \description{
 Append multiple epitables together into a single table.
 }
-\examples{
-epitable_append()
-}
 \keyword{html}
 \keyword{tables}
