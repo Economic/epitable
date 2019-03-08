@@ -3,7 +3,9 @@
 epitable
 ========
 
-epitable is an R package that creates HTML tables formatted for EPI's website.
+epitable is an R package that prints HTML tables formatted for [EPI's website](https://www.epi.org/).
+
+This is primarily of use for folks who work at EPI. If you are looking for a great all-purpose HTML table-making package, check out [htmlTable](https://cran.r-project.org/web/packages/htmlTable/). epitable is based on htmlTable but is adapted to create tables in line with EPI's website specifications.
 
 Documentation
 -------------

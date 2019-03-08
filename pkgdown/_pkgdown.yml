@@ -1,0 +1,16 @@
+url: http://economic.github.io/epitable
+template:
+  params:
+    bootswatch: flatly
+navbar:
+  type: default
+  right:
+  - text: Introduction
+    href: articles/epitable.html
+  - text: Reference
+    href: reference/index.html
+  - text: Changelog
+    href: news/index.html
+  left:
+  - icon: fa-github fa-lg
+    href: https://github.com/economic/epitable

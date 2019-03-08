@@ -1,13 +1,13 @@
 Package: epitable
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
-License: What license it uses
+Version: 0.0.1
+Title: Make HTML Tables Compatible with EPI's Website
+Description: Generate EPI website-friendly HTML tables from a data frame.
+Authors@R: c(
+    person(given = "Economic Policy Institute",
+           role = c("aut", "cre", "cph"),
+           email = "epi@epi.org")
+    )
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1.9000

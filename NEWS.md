@@ -1,3 +1,3 @@
-# epitable 0.0.0.9000
+# epitable 0.0.1
 
-* Added a `NEWS.md` file to track changes to the package.
+* At some point there will be a proper changelog

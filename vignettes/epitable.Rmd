@@ -1,5 +1,5 @@
 ---
-title: "Introduction to epitable!"
+title: "Introduction to epitable"
 #author: "Vignette Author"
 #date: "`r Sys.Date()`"
 output: 
@@ -20,6 +20,8 @@ opts_chunk$set(
   comment = "#>"
 )
 
+# option to print a subset of lines of chunk output
+# source: https://stackoverflow.com/a/23147563/1462014
 hook_output <- knit_hooks$get("output")
 knit_hooks$set(output = function(x, options) {
   lines <- options$output.lines
@@ -43,17 +45,6 @@ knit_hooks$set(output = function(x, options) {
 
 
 ```
-epitable will print HTML tables according to EPI website specifications.
-
-To install, 
-```{r eval=FALSE}
-devtools::install_github("Economic/epitable")
-
-## install package and vignettes
-devtools::install_github("Economic/epitable", build_opts = c("--no-resave-data", "--no-manual"))
-browseVignettes("epitable")
-```
-
 ## Basic example
 epitable contains some example data on trade balances:
 ```{r}
@@ -79,7 +70,7 @@ As you've noticed, by default epitable's output shows up in the RStudio viewer. 
 epitable(tradebalance, rownamesvar=industry, file = "mytable.html")
 ```
 
-That file will only contain the snippet of HTML that is the table. To write a fully self-contained web page, use the selfcontained option:
+That file will only contain the snippet of HTML that is the table. To write a fully self-contained web page, use the `selfcontained` option:
 ```{r eval=FALSE}
 epitable(tradebalance, rownamesvar=industry, file = "mytable.html", selfcontained=TRUE)
 ```
@@ -90,7 +81,7 @@ To display the raw HTML of the table snippet in the console, try
 print(epitable(tradebalance, rownamesvar=industry), useViewer=FALSE)
 ```
 
-## Formatting entries (use the scales package)
+## Formatting entries
 An easy way to format decimal points, percent signs, etc., is to use the scales package, which transforms columns of your dataset into character strings:
 
 ```{r}
@@ -140,7 +131,7 @@ Add column groups:
 ``` {r}
 epitable(tradebalance_fmt, 
          rownamesvar=industry, 
-         rowlevels=thelevels, 
+         rowlevels=thelevels,
          colgroups=c("Imports", "Exports", "Trade balance"), 
          colgroupspattern=c(2, 2, 2), 
          colnames=rep(c("Levels (\\$billions)", "Share of total change"),3)
@@ -157,12 +148,15 @@ data1 <- tradebalance_fmt %>%
   mutate_at(vars(ends_with("level")), ~paste0("$",.))
 data2 <- tradebalance_fmt %>% filter(industry != "Total change")
 table1 <- epitable(data1, 
-                   rownamesvar=industry, 
+                   rownamesvar=industry,
                    colgroups = c("Imports", "Exports", "Trade balance"), 
                    colgroupspattern = c(2, 2, 2), 
                    colnames = rep(c("Levels (\\$billions)", "Share of total change"),3)
                    )
-table2 <- epitable(data2, rownamesvar=industry, header=FALSE)
+table2 <- epitable(data2, 
+                   rownamesvar=industry, 
+                   rowlevels=thelevels[2:length(thelevels)], 
+                   header=FALSE)
 epitable_append(table1, table2)
 ```
 

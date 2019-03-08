@@ -2,10 +2,10 @@
 epicss <-
   system.file("extdata", "epi-chart.css" ,package = "epitable") %>%
   read_file() %>%
-  paste("html * {font-family: 'Proxima Nova', 'Lato' !important;}\n") %>%
+#  paste("html * {font-family: 'Proxima Nova', 'Lato' !important;}\n") %>%
   paste(".figure.figure-theme-clean{margin:0;border-top:none;}\n") %>%
   paste(".figure.figure-theme-clean .figInner{border-bottom:none;}\n") %>%
-  paste(".figure .figInner table th[scope=\"col\"][colspan],.external-chartcard-info .figInner table th[scope=\"col\"][colspan],.figure .figInner table th[scope=\"colgroup\"][colspan],.external-chartcard-info .figInner table th[scope=\"colgroup\"][colspan]{border-bottom:0;background:#fff;text-align:center;text-transform:none;font-weight:600;border-bottom:2px solid #ddd}\n")
+  paste(".figure .figInner table th[scope=\"col\"][colspan],.figure .figInner table th[scope=\"colgroup\"][colspan]{text-transform:none}\n")
 
 
 # load complete test table for testing purposes
@@ -56,9 +56,10 @@ table_meat <- function(x,
     the_header <- paste0("\n<thead>")
 
     if (!is.null(colgroups) && !is.null(colgroupspattern)) {
+      # begin column groups
       the_header %<>% paste0("\n<tr>")
-      colgrouprownameheader <- ""
-      the_header %<>% paste0("\n<th scope=\"colgroup\">", colgrouprownameheader, "</th>")
+      # blank first column
+      the_header %<>% paste0("\n<th scope=\"colgroup\">","</th>")
       for (col_j in 1:length(colgroups)) {
         if (col_j == 1) {
           class<-NULL
@@ -67,6 +68,7 @@ table_meat <- function(x,
         the_header %<>% paste0("\n<th ", class, "colspan=\"", colgroupspattern[col_j], "\" scope=\"colgroup\">", colgroups[col_j], "</th>")
       }
 
+      # end column groups
       the_header %<>% paste0("</tr>")
    }
 
@@ -277,19 +279,31 @@ verify_class_epitable <- function(x) {
 #' @export
 #' @examples
 #' epitable_append()
-epitable_append <- function(...) {
+epitable_append <- function(..., file) {
   # confirm all arguments have class epitable
   verified <- lapply(list(...), verify_class_epitable) %>% unlist() %>% all()
 
-  if (verified) {
-    x <- paste(...,sep="\n")
-    stripped <- gsub("<table>", "", x)
-    stripped <- gsub("</table>", "", stripped)
-    the_table <- paste("<table>",stripped,"</table>",sep="\n")
-    class(the_table) = c("epitable")
-    return(the_table)
-  } else {
+  if (!verified) {
     stop("All arguments must have class epitable.")
+  }
+
+  x <- paste(...,sep="\n")
+  stripped <- gsub("<table>", "", x)
+  stripped <- gsub("</table>", "", stripped)
+  the_table <- paste("<table>",stripped,"</table>",sep="\n")
+  class(the_table) = c("epitable")
+  return(the_table)
+
+  # if writing to file
+  if(!is.null(file)) {
+    if (selfcontained) {
+      htmlpage <- paste0(
+        selfcontained_top(),
+        the_table,
+        selfcontained_bottom()
+      )
+      cat(htmlpage,file = file)
+    } else cat(the_table, file = file)
   }
 }
 

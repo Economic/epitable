@@ -4,7 +4,7 @@
 \alias{epitable_append}
 \title{Append multiple epitables}
 \usage{
-epitable_append(...)
+epitable_append(..., file)
 }
 \arguments{
 \item{...}{Comma separated tables.}

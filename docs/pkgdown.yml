@@ -3,4 +3,7 @@ pkgdown: 1.3.0.9000
 pkgdown_sha: 59cc923c953d483091aae2b6b626b195674efb5f
 articles:
   epitable: epitable.html
+urls:
+  reference: http://economic.github.io/epitable/reference
+  article: http://economic.github.io/epitable/articles
 
