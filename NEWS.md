@@ -1,7 +1,7 @@
 # epitable 0.0.2
 
 ## New features
-* extrarowX argument to add extra rows
+* extrarowX argument will add extra rows
   
 ## Fixes
 * A lot
