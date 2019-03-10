@@ -1,185 +1,3 @@
-# load EPI CSS
-epicss <-
-  system.file("extdata", "epi-chart.css" ,package = "epitable") %>%
-  read_file() %>%
-#  paste("html * {font-family: 'Proxima Nova', 'Lato' !important;}\n") %>%
-  paste(".figure.figure-theme-clean{margin:0;border-top:none;}\n") %>%
-  paste(".figure.figure-theme-clean .figInner{border-bottom:none;}\n") %>%
-  paste(".figure .figInner table th[scope=\"col\"][colspan],.figure .figInner table th[scope=\"colgroup\"][colspan]{text-transform:none}\n")
-
-
-# load complete test table for testing purposes
-testtable <- system.file("extdata", "testtable.html", package = "epitable")
-
-selfcontained_bodypre <- paste("<div class=\"figure figure-table figure-theme-clean\"><div class=\"figInner\">","\n")
-selfcontained_bodypost <- paste("</div></div>\n")
-
-# top matter for self-contained webpage
-selfcontained_top <- function() {
-  htmlpage <- paste("<html>",
-                    "<head>",
-                    "<meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\">",
-                    "<style>",
-                    epicss,
-                    "</style>",
-                    "</head>",
-                    "<body>",
-                    selfcontained_bodypre,
-                    "",
-                    sep="\n")
-  return(htmlpage)
-}
-
-# bottom matter for self-contained webpage
-selfcontained_bottom <- function() {
-  htmlpage <- paste("",
-                    selfcontained_bodypost,
-                    "</body>",
-                    "</html>",
-                    sep="\n")
-  return(htmlpage)
-}
-
-table_meat <- function(x,
-                       rownames,
-                       rowlevels,
-                       colnames,
-                       colgroups,
-                       header,
-                       ...
-                       ) {
-
-  dotsargs <- list(...)
-
-  table_input <- x %>% as.data.frame()
-
-  if (header) {
-    # begin table header
-    the_header <- paste0("\n<thead>")
-
-    if (!is.null(colgroups)) {
-      colgroupsnames <- colgroups$names
-      colgroupspattern <- colgroups$pattern
-
-      # begin column groups
-      the_header %<>% paste0("\n<tr>")
-      # blank first column
-      the_header %<>% paste0("\n<th scope=\"colgroup\">","</th>")
-      for (col_j in 1:length(colgroupspattern)) {
-        if (col_j == 1) {
-          class<-NULL
-        } else class<-paste("class=\"table-division-left\" ")
-
-        the_header %<>% paste0("\n<th ", class, "colspan=\"", colgroupspattern[col_j], "\" scope=\"colgroup\">", colgroupsnames[col_j], "</th>")
-      }
-
-      # end column groups
-      the_header %<>% paste0("</tr>")
-   }
-
-    # begin column names
-    the_header %<>% paste0("\n<tr>")
-    # blank col above rownamesvar for now
-    rownameheader <- ""
-    the_header %<>% paste0("<th scope=\"col\">", rownameheader, "</th>")
-    if (is.null(colnames)) {
-      colnames <- colnames(x)
-    }
-    style<-paste("style=\"text-align: right;\"")
-    for (col_j in 1:length(colnames)) {
-      the_header %<>% paste("<th scope=\"col\"",style,">", colnames[col_j], "</th>")
-    }
-    # end column names
-    the_header %<>% paste0("</tr>")
-
-    # end table header
-    the_header %<>% paste0("\n</thead>")
-  } else {
-    the_header <- NULL
-  }
-
-  the_table <- the_header
-
-  # begin table body
-  the_table %<>% paste("\n<tbody>")
-
-  # loop over rows
-  for (row_i in 1:nrow(x)) {
-
-    # add extra row if necessary
-
-    # set up arguments for extra row
-    extrarowlist <- dotsargs[[paste0("extrarow",row_i)]]
-    colgroupspattern <- extrarowlist$colgroups$pattern
-    colgroupsnames <- extrarowlist$colgroups$names
-    if (!is.null(colgroupspattern) && !is.null(colgroupsnames)) {
-      extracolgroups <- TRUE
-    } else extracolgroups <- FALSE
-
-    if (!is.null(extrarowlist)) {
-      # begin extra row
-
-      if (is.null(extrarowlist$pseudoheader)) {
-        extrarowlist$pseudoheader <- FALSE
-      }
-      if (extrarowlist$pseudoheader) {
-        trclass<-paste0(" class=\"table-pseudo-header\"")
-      } else trclass <-NULL
-
-      the_table %<>% paste0("\n<tr",trclass,">")
-
-      # add name to column 0
-        if (!extracolgroups) {
-          colspan0length <- length(table_input[,1])
-        } else colspan0length <- 1
-        colspanstr <- paste0(" colspan=\"", colspan0length, "\"")
-
-
-        the_table %<>% paste0("\n<th", colspanstr, " scope=\"row\">", extrarowlist$name, "</th>")
-
-
-      if (extracolgroups) {
-        for (col_j in 1:length(colgroupspattern)) {
-          the_table %<>% paste0("\n<th colspan=\"", colgroupspattern[col_j], "\" style=\"text-align: center;\">", colgroupsnames[col_j], "</th>")
-        }
-      }
-
-      # end extra row
-      the_table %<>% paste("\n</tr>")
-    }
-
-
-
-    # begin actual row
-    if (is.null(rowlevels)) {
-      the_table %<>% paste0("\n<tr>")
-    } else if (rowlevels[row_i] == 1) {
-      the_table %<>% paste0("\n<tr>")
-    } else {
-      the_table %<>% paste0("\n<tr class=\"row-level",rowlevels[row_i],"\">")
-    }
-
-    # row header
-    the_table %<>% paste0("\n<th scope=\"row\">", rownames[row_i], "</th>")
-
-    style<-paste("style=\"font-variant-numeric: tabular-nums; text-align: right;\"")
-
-    # loop over columns
-    for (col_j in 1:length(table_input[row_i,])) {
-      the_table %<>% paste("\n<td",style,">",table_input[[row_i,col_j]], "</td>")
-    }
-
-    # end row
-    the_table %<>% paste("\n</tr>")
-  }
-
-  # end table body
-  the_table %<>% paste("\n</tbody>")
-
-  return(the_table)
-}
-
-
 #' @title A EPI HTML Table Making Function
 #'
 #' @description This is the table making function.
@@ -237,31 +55,22 @@ epitable <- function(x,
     stop("rownames needs to have the same number of rows as your data")
   }
 
+  # select specified columns
   if (!is.null(select)) {
     x %<>% select(select)
   }
 
-  # make the meat of the table
-  the_meat <-
-    table_meat(
-      x,
-      rownames = rownames,
-      rowlevels = rowlevels,
-      colnames = colnames,
-      colgroups = colgroups,
-      header = header,
-      ...
-    )
+  # define table header
+  the_header <- epitable_header(x = x, colnames = colnames, colgroups = colgroups, header = header)
 
-  # create the table snippet
-  # begin the table
-  the_table <- paste("<table>\n")
+  # define table body
+  the_body <- epitable_body(x = x, rownames = rownames, rowlevels = rowlevels, ...)
 
-  # add the meat
-  the_table %<>% paste0(the_meat,"\n")
-
-  # end the table
-  the_table %<>% paste("\n</table>")
+  # create table
+  the_table <- paste0("<table>\n")
+  the_table %<>% paste0(the_header,"\n")
+  the_table %<>% paste0(the_body,"\n")
+  the_table %<>% paste0("</table>")
 
   # if writing to file
   if(!is.null(file)) {
@@ -323,12 +132,6 @@ print.epitable <- function(x, useViewer=TRUE) {
 }
 
 
-verify_class_epitable <- function(x) {
-  y <- class(x) == "epitable"
-  return(y)
-}
-
-
 #' @title Append multiple epitables
 #'
 #' @description Append multiple epitables together into a single table.
@@ -362,16 +165,4 @@ epitable_append <- function(..., file) {
     } else cat(the_table, file = file)
   }
 }
-
-# examples
-# basic table
-#epitable(1, example)
-
-# write the table
-#epitable("y'all", example, file = "test.html")
-#epitable("y'all", example, file = "test_selfcontained.html", selfcontained=TRUE)
-#cat(epitable(222), file="test.html")
-
-# view the snippet of table in console
-#print(epitable(3, example), useViewer=FALSE)
 
